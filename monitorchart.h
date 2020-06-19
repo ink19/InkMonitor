@@ -2,16 +2,22 @@
 #define MONITORCHART_H
 #include <QWidget>
 #include <QtCharts>
-
-class MonitorChart: public QtCharts::QChartView
+#include <QTimer>
+#include <QSplineSeries>
+class MonitorChart: public QChartView
 {
   Q_OBJECT
 public:
   MonitorChart(QWidget *parent = nullptr);
+  void appendData(double data);
 
-protected:
-  QtCharts::QChart *chart_;
-  
+private:
+  QChart *chart_;
+  QTimer *timer_;
+  QSplineSeries *spline_series_;
+  int now_time = 0;
+private slots:
+  void temp_add_data();
 };
 
 #endif // MONITORCHART_H

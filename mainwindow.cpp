@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
   this->resize(800, 600);
   QScrollArea *scroll_area = new QScrollArea(this);
   this->setCentralWidget(scroll_area);
-  
   widget_ = new MainWidget (scroll_area); 
   scroll_area->setWidget(widget_);
   scroll_area->setAttribute(Qt::WA_TranslucentBackground);
@@ -34,7 +33,7 @@ MainWindow::~MainWindow()
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-      /* 捕获按下时坐标 */
+      qDebug() << "Clicked";
       is_left_pressed = true;
       m_startPoint = frameGeometry().topLeft() - event->globalPos();
     } else if (event->button() == Qt::RightButton) {
@@ -68,6 +67,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton) {
+    qDebug() << "Released";
     is_left_pressed = false;
   }
 }
@@ -76,6 +76,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if (is_left_pressed) {
+      
       this->move(event->globalPos() + m_startPoint);
     }
 }
