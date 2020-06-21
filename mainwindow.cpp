@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "monitorconfig.h"
 #include <QPaintEvent>
 #include <QPainter>
 #include "monitorchart.h"
@@ -6,9 +7,13 @@
 #include <QScrollArea>
 #include <QMenu>
 #include <QAction>
+#include <QDir>
+#include <QFile>
+
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
 {
+  initScript();
   //setWindowFlag(Qt::FramelessWindowHint);
   setAttribute(Qt::WA_TranslucentBackground);
   this->resize(800, 600);
@@ -23,6 +28,18 @@ MainWindow::MainWindow(QWidget *parent)
   widget_->appendChart(new MonitorChart(widget_));
   widget_->appendChart(new MonitorChart(widget_));
   widget_->appendChart(new MonitorChart(widget_));
+}
+
+int MainWindow::initScript()
+{
+  QDir Monitor;
+  if (!Monitor.exists(MONITOR_TEMP_DIR)) {
+    Monitor.mkdir(MONITOR_TEMP_DIR);
+  }
+  
+  QFile::copy(":/script/inkmonitor_loop.sh", QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh");
+  QFile::copy(":/script/memratio.sh", QString(MONITOR_TEMP_DIR) + "memratio.sh");
+  return 0;
 }
 
 MainWindow::~MainWindow()

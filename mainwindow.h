@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
   
 public:
   MainWindow(QWidget *parent = nullptr);
+  int initScript();
   ~MainWindow();
 private:
   MainWidget *widget_;

@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <algorithm>
 #include <QProcess>
+#include "monitorconfig.h"
 
 MonitorChart::MonitorChart(QWidget *parent):
   QChartView(parent)
@@ -24,6 +25,8 @@ MonitorChart::MonitorChart(QWidget *parent):
   chart_->axes(Qt::Horizontal).at(0)->hide();
   this->setChart(chart_);
   this->setFixedHeight(200);
+  process.start("sh", QStringList() << QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh" << QString(MONITOR_TEMP_DIR) + "memratio.sh");
+  process.waitForStarted();
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(temp_add_data()));
   
@@ -38,12 +41,28 @@ void MonitorChart::appendData(double data)
   chart_->scroll(dwidth, 0);
 }
 
+MonitorChart::~MonitorChart()
+{
+  process.kill();
+  process.waitForFinished();
+}
+
 void MonitorChart::temp_add_data()
 {
-  QProcess p;
-  p.start("sh", QStringList() << "/home/ink19/memratio.sh");
-  p.waitForStarted();
-  p.waitForFinished();
-  double mem_ratio = QString::fromLocal8Bit(p.readAllStandardOutput()).toDouble();
+  QString mem_ratio_s = QString::fromLocal8Bit(process.readAllStandardOutput());
+  int begin = 0, end = -1;
+  for (int loop_s = 0; loop_s < mem_ratio_s.length(); ++loop_s) {
+    if (mem_ratio_s.at(loop_s) == '\n') {
+      begin = end + 1;
+      end = loop_s;
+    }
+  }
+  double mem_ratio = mem_ratio_s.mid(begin, end - begin).toDouble();
+  if (end == -1) {
+    mem_ratio = last_value;
+  } else {
+    last_value = mem_ratio;
+  }
+  qDebug() << mem_ratio;
   appendData(mem_ratio);
 }

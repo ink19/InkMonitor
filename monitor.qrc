@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/script">
+        <file>inkmonitor_loop.sh</file>
+        <file>memratio.sh</file>
+    </qresource>
+</RCC>
