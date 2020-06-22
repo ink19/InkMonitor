@@ -19,7 +19,8 @@ SOURCES += \
     main.cpp \
     mainheader.cpp \
     mainwindow.cpp \
-    monitorchart.cpp
+    monitorchart.cpp \
+    monitorconfig.cpp
 
 HEADERS += \
     mainheader.h \

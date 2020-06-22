@@ -1,0 +1,17 @@
+{
+    "monitor" : [
+        {
+            "script" : ":memory",
+            "max": 1,
+            "min": 0
+        }, {
+            "script" : ":cpu",
+            "max": 1,
+            "min": 0
+        }, {
+            "script" : ":random",
+            "max": 1,
+            "min": 0
+        }
+    ]
+}

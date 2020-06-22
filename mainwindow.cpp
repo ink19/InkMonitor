@@ -25,9 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
   scroll_area->setWidgetResizable(true);
   widget_->setAttribute(Qt::WA_TranslucentBackground);
   
-  widget_->appendChart(new MonitorChart(widget_));
-  widget_->appendChart(new MonitorChart(widget_));
-  widget_->appendChart(new MonitorChart(widget_));
+  
+  for (auto chart_config : this->config_.charts_config_) {
+    widget_->appendChart(new MonitorChart(chart_config, widget_));
+  }
 }
 
 int MainWindow::initScript()
@@ -37,8 +38,21 @@ int MainWindow::initScript()
     Monitor.mkdir(MONITOR_TEMP_DIR);
   }
   
-  QFile::copy(":/script/inkmonitor_loop.sh", QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh");
-  QFile::copy(":/script/memratio.sh", QString(MONITOR_TEMP_DIR) + "memratio.sh");
+  if (!QFile::exists(QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh")) {
+    QFile::copy(":/script/inkmonitor_loop.sh", QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh");
+  }
+  
+  if (!QFile::exists(QString(MONITOR_TEMP_DIR) + "memratio.sh")) {
+    QFile::copy(":/script/memratio.sh", QString(MONITOR_TEMP_DIR) + "memratio.sh");
+  }
+  
+  if (!QFile::exists(QString(MONITOR_TEMP_DIR) + "cpuratio.sh")) {
+    QFile::copy(":/script/cpuratio.sh", QString(MONITOR_TEMP_DIR) + "cpuratio.sh");
+  }
+  
+  if (!QFile::exists(QString(MONITOR_TEMP_DIR) + "random.sh")) {
+    QFile::copy(":/script/random.sh", QString(MONITOR_TEMP_DIR) + "random.sh");
+  }
   return 0;
 }
 

@@ -6,11 +6,19 @@
 #include <QSplineSeries>
 #include <QProcess>
 
+class MonitorChartConfig {
+public:
+  double min_;
+  double max_;
+  QString script_;
+  MonitorChartConfig(QString script, double min, double max);
+};
+
 class MonitorChart: public QChartView
 {
   Q_OBJECT
 public:
-  MonitorChart(QWidget *parent = nullptr);
+  MonitorChart(MonitorChartConfig &config, QWidget *parent = nullptr);
   void appendData(double data);
   ~MonitorChart();
 private:

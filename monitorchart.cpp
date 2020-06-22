@@ -8,7 +8,7 @@
 #include <QProcess>
 #include "monitorconfig.h"
 
-MonitorChart::MonitorChart(QWidget *parent):
+MonitorChart::MonitorChart(MonitorChartConfig &config, QWidget *parent):
   QChartView(parent)
 {
   spline_series_ = new QSplineSeries;
@@ -23,13 +23,16 @@ MonitorChart::MonitorChart(QWidget *parent):
   chart_->setBackgroundVisible(false);
   chart_->axes(Qt::Horizontal).at(0)->setRange(-100, 0);
   chart_->axes(Qt::Horizontal).at(0)->hide();
+  
+  chart_->axes(Qt::Vertical).at(0)->setRange(config.min_, config.max_);
+
+  
   this->setChart(chart_);
   this->setFixedHeight(200);
-  process.start("sh", QStringList() << QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh" << QString(MONITOR_TEMP_DIR) + "memratio.sh");
+  process.start("sh", QStringList() << QString(MONITOR_TEMP_DIR) + "inkmonitor_loop.sh" << config.script_);
   process.waitForStarted();
   timer_ = new QTimer(this);
   connect(timer_, SIGNAL(timeout()), this, SLOT(temp_add_data()));
-  
   timer_->start(400);
 }
 
@@ -63,6 +66,23 @@ void MonitorChart::temp_add_data()
   } else {
     last_value = mem_ratio;
   }
-  qDebug() << mem_ratio;
   appendData(mem_ratio);
+}
+
+MonitorChartConfig::MonitorChartConfig(QString script, double min, double max):
+  min_(min),
+  max_(max)
+{
+  script_ = script;
+  if (script == ":memory") {
+    script_ = QString(MONITOR_TEMP_DIR) + "memratio.sh";
+  }
+  
+  if (script == ":cpu") {
+    script_ = QString(MONITOR_TEMP_DIR) + "cpuratio.sh";
+  }
+  
+  if (script == ":random") {
+    script_ = QString(MONITOR_TEMP_DIR) + "random.sh";
+  }
 }

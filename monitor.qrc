@@ -2,5 +2,10 @@
     <qresource prefix="/script">
         <file>inkmonitor_loop.sh</file>
         <file>memratio.sh</file>
+        <file>cpuratio.sh</file>
+        <file>random.sh</file>
+    </qresource>
+    <qresource prefix="/config">
+        <file>config.json</file>
     </qresource>
 </RCC>

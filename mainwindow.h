@@ -5,6 +5,7 @@
 #include <QPaintEvent>
 #include <QPoint> 
 #include "monitorchart.h"
+#include "monitorconfig.h"
 #include <QVector>
 
 class MainWidget : public QWidget {
@@ -35,6 +36,7 @@ private:
   bool is_left_pressed = false;
   bool is_titlebar_show = true;
   bool is_on_top = false;
+  MonitorConfig config_;
 private slots:
   void switchTitleVisible();
   void switchOnTop();
